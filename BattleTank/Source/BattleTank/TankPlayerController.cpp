@@ -16,11 +16,6 @@ void ATankPlayerController::BeginPlay()
 	{
 		FoundAimingComponent(AimingComponent);
 	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Player controller can't find aiming component at Begin Play"))
-	}
-	
 }
 
 void ATankPlayerController::Tick(float DeltaTime)
@@ -36,7 +31,8 @@ void ATankPlayerController::AimTowardsCrosshair()
 	if (!ensure(AimingComponent)) { return;  }
 
 	FVector HitLocation; // Out parameter
-	if (GetSightRayHitLocation(HitLocation)) // Has "side-effect", is going to line trace
+	bool bGotHitLocation = GetSightRayHitLocation(HitLocation);
+	if (bGotHitLocation) // Has "side-effect", is going to line trace
 	{
 		AimingComponent->AimAt(HitLocation);
 	}
@@ -56,10 +52,10 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector& HitLocation) const
 	if (GetLookDirection(ScreenLocation, LookDirection))
 	{
 		// Line-tracing along that LookDirection, and see what we hit (up to max range)
-		GetLookVectorHitLocation(LookDirection, HitLocation);
+		return GetLookVectorHitLocation(LookDirection, HitLocation);
 	}
 	// Line-trace along that LookDirection, and see what we hit (up to max range)
-	return true;
+	return false;
 }
 
 bool ATankPlayerController::GetLookVectorHitLocation(FVector LookDirection, FVector& HitLocation) const
