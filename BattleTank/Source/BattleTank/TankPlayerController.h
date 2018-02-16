@@ -19,6 +19,11 @@ class BATTLETANK_API ATankPlayerController : public APlayerController
 public:
 	virtual void BeginPlay() override;
 
+	void SetPawn(APawn * InPawn);
+
+	UFUNCTION()
+	void OnPossedTankDeath();
+
 	virtual void Tick(float DeltaTime) override;
 
 protected:
